@@ -10,17 +10,17 @@ namespace LSHNearestNeighbour
         /// <summary>
         ///     dowolna liczba pierwsza większa od m (max indeks piosenki)
         /// </summary>
-        private static readonly int p = 1018649;
+        private static readonly int _p = 1018649;
 
         /// <summary>
         ///     liczba bandów
         /// </summary>
-        private static readonly byte b = 25;
+        private static readonly byte _b = 4;
 
         /// <summary>
         ///     liczba wierszy w bandzie
         /// </summary>
-        private static readonly byte r = 4;
+        private static readonly byte _r = 4;
 
         /// <summary>
         ///     Oszacuj podobieństwo Jaccarda
@@ -57,7 +57,7 @@ namespace LSHNearestNeighbour
         /// <returns></returns>
         private static int Hash(int x, int m, int a, int b)
         {
-            return (int) (((long) a * x + b) % p) % m;
+            return (int) (((long) a * x + b) % _p) % m;
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace LSHNearestNeighbour
             var result = new List<int>();
             var random = new Random();
 
-            var a = random.Next(1, p - 1);
-            var b = random.Next(0, p - 1);
+            var a = random.Next(1, _p - 1);
+            var b = random.Next(0, _p - 1);
 
             for (var i = 0; i < m; i++)
             {
@@ -107,12 +107,12 @@ namespace LSHNearestNeighbour
              */
             var userSignatures = new Dictionary<int, int[]>();
 
-            for (var i = 0; i < b; i++)
+            for (var i = 0; i < _b; i++)
             {
                 // Kazdy użytkownik ma sygnature o długości r 
                 var signatureBrand = new Dictionary<int, string>();
 
-                for (var j = 0; j < r; j++)
+                for (var j = 0; j < _r; j++)
                 {
                     var h = GetHashFunctions(m);
 
@@ -135,18 +135,18 @@ namespace LSHNearestNeighbour
                         //dodawanie minhasha do sygnatury użytkownika
                         if (!userSignatures.ContainsKey(user.Key))
                         {
-                            var sig = new int[r * b];
-                            sig[i * r + j] = min;
+                            var sig = new int[_r * _b];
+                            sig[i * _r + j] = min;
                             userSignatures.Add(user.Key, sig);
                         }
                         else
                         {
-                            userSignatures[user.Key][i * r + j] = min;
+                            userSignatures[user.Key][i * _r + j] = min;
                         }
                     }
                 }
                 brands[i] = signatureBrand;
-                Console.WriteLine($"Calculate brand :{i + 1}/{b}");
+                Console.WriteLine($"Calculate brand :{i + 1}/{_b}");
             }
 
             //pary kandydackie 
@@ -175,7 +175,7 @@ namespace LSHNearestNeighbour
                     {
                         userCandidates[user1].Add(user2);
                     }
-                Console.WriteLine($"userCandidates brand :{k}/{b}");
+                Console.WriteLine($"userCandidates brand :{k}/{_b}");
                 k++;
             }
             brands.Clear();
